@@ -3,7 +3,8 @@ import psycopg2
 import os
 from dotenv import load_dotenv
 
-load_dotenv("link_to_database.env")
+if os.path.exists("link_to_database.env"):
+    load_dotenv("link_to_database.env")
 
 app = Flask(__name__)
 
@@ -18,27 +19,40 @@ def index():
         age = request.form["age"]
         gender = request.form["gender"]
 
-        conn = psycopg2.connect(DB_CONNECTION_STRING)
-        cur = conn.cursor()
+        try:
+            connection = psycopg2.connect(DB_CONNECTION_STRING)
+            cursor = connection.cursor()
 
-        cur.execute("""
+            create_table_query = """
             CREATE TABLE IF NOT EXISTS people (
                 id SERIAL PRIMARY KEY,
                 name VARCHAR(100),
                 age INT,
                 gender VARCHAR(50)
             );
-        """)
+            """
+            cursor.execute(create_table_query)
 
-        cur.execute(
-            "INSERT INTO people (name, age, gender) VALUES (%s, %s, %s)",
-            (name, age, gender)
-        )
+            insert_query = "INSERT INTO people (name, age, gender) VALUES (%s, %s, %s);"
+            
+            for person in people_data:
+                cursor.execute(insert_query, (person["name"], person["age"], person["gender"]))
+            
+            connection.commit()
+            print("Success! One person have been securely saved to the remote server.")
 
-        conn.commit()
+            cursor.close()
+            connection.close()
 
-        cur.close()
-        conn.close()
+        except Exception as e:
+            print(f"Something went wrong: {e}")
+
+        finally:
+            if 'cursor' in locals():
+                cursor.close()
+            if 'connection' in locals():
+                connection.close()
+            print("Database connection closed cleanly.")
 
         return "Saved successfully!"
 
