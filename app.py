@@ -54,7 +54,7 @@ def index():
                 connection.close()
             print("Database connection closed cleanly.")
 
-        return "Saved successfully!"
+        return "Saved successfully! Nice"
 
     return render_template("index.html")
 
