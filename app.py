@@ -35,8 +35,7 @@ def index():
 
             insert_query = "INSERT INTO people (name, age, gender) VALUES (%s, %s, %s);"
             
-            for person in people_data:
-                cursor.execute(insert_query, (person["name"], person["age"], person["gender"]))
+            cursor.execute(insert_query, (name, age, gender))
             
             connection.commit()
             print("Success! One person have been securely saved to the remote server.")
