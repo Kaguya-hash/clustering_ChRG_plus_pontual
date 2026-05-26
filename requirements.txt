@@ -1,4 +1,10 @@
 flask
+json
 psycopg2-binary
-gunicorn
 dotenv
+sklearn
+io
+base64
+matplotlib
+numpy
+gunicorn

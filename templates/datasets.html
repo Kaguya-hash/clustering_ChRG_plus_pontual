@@ -1,0 +1,111 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Select Dataset</title>
+</head>
+<body>
+
+    <h2>Data Generator</h2>
+
+    <h3>Select a dataset:</h3>
+
+    <ul>
+        {% for dataset in datasets %}
+            <li>
+                <a href="#" onclick="showForm('{{ dataset['id'] }}', '{{ dataset['dataset_name'] }}'); return false;">
+                    {{ dataset['dataset_name'] }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+
+    {% for dataset in datasets %}
+        <div id="form-{{ dataset['id'] }}" style="display: none; margin-top: 20px;">
+
+            <h4>{{ dataset['dataset_name'] }} — parameters</h4>
+
+            <div style="display: flex; gap: 40px; align-items: flex-start;">
+
+                <div>
+                    {% for param_name, config in dataset['parameters_schema'].items() %}
+                        <label>
+                            {{ param_name }}:
+                            <input
+                                type="number"
+                                id="{{ param_name }}_{{ dataset['id'] }}"
+                                min="{{ config['min'] }}"
+                                max="{{ config['max'] }}"
+                                value="{{ config['default'] }}"
+                                step="{{ '0.01' if config['type'] == 'float' else '1' }}"
+                                oninput="schedulePreview('{{ dataset['id'] }}', '{{ dataset['dataset_name'] }}')"
+                            >
+                        </label><br>
+                    {% endfor %}
+
+                    <br>
+                    <button onclick="submit('{{ dataset['id'] }}', '{{ dataset['dataset_name'] }}')">
+                        Submit
+                    </button>
+                </div>
+
+                <div>
+                    <img id="preview-{{ dataset['id'] }}" src="" alt="Preview" width="300" style="display: none;">
+                    <p id="loading-{{ dataset['id'] }}" style="display: none; color: gray;">Generating...</p>
+                </div>
+
+            </div>
+
+        </div>
+    {% endfor %}
+
+    <script>
+        let debounceTimer = null;
+
+        function showForm(id, datasetName) {
+            document.querySelectorAll("[id^='form-']").forEach(el => el.style.display = "none");
+            document.getElementById("form-" + id).style.display = "block";
+            fetchPreview(id, datasetName);
+        }
+
+        function schedulePreview(id, datasetName) {
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => fetchPreview(id, datasetName), 400);
+        }
+
+        function fetchPreview(id, datasetName) {
+            const params = {};
+            document.querySelectorAll("#form-" + id + " input").forEach(input => {
+                params[input.id.replace("_" + id, "")] = Number(input.value);
+            });
+
+            const loading = document.getElementById("loading-" + id);
+            const img = document.getElementById("preview-" + id);
+            loading.style.display = "block";
+            img.style.display = "none";
+
+            fetch("/preview/" + datasetName, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(params)
+            })
+            .then(res => res.json())
+            .then(data => {
+                img.src = "data:image/png;base64," + data.plot;
+                img.style.display = "block";
+                loading.style.display = "none";
+            });
+        }
+
+        function submit(datasetId, datasetName) {
+            const params = {};
+            document.querySelectorAll("#form-" + datasetId + " input").forEach(input => {
+                params[input.id.replace("_" + datasetId, "")] = Number(input.value);
+            });
+            const encodedParams = encodeURIComponent(JSON.stringify(params));
+            window.location.href = "/" + datasetName + "/" + encodedParams;
+        }
+    </script>
+
+</body>
+</html>

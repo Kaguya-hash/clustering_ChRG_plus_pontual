@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Select Clustering Method</title>
+</head>
+<body>
+
+    <h2>Dataset: {{ dataset_name }}</h2>
+
+    {% if dataset_plot %}
+        <img src="data:image/png;base64,{{ dataset_plot }}" alt="Dataset plot" width="400">
+    {% endif %}
+
+    <h3>Select a method:</h3>
+
+    <ul>
+        {% for method in methods %}
+            <li>
+                <a href="#" onclick="showForm('{{ method['id'] }}'); return false;">
+                    {{ method['method_name'] }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+
+    {% for method in methods %}
+        <div id="form-{{ method['id'] }}" style="display: none; margin-top: 20px;">
+
+            <h4>{{ method['method_name'] }} — parameters</h4>
+
+            {% for param_name, config in method['parameters_schema'].items() %}
+                <label>
+                    {{ param_name }}:
+                    <input
+                        type="number"
+                        id="{{ param_name }}_{{ method['id'] }}"
+                        min="{{ config['min'] }}"
+                        max="{{ config['max'] }}"
+                        value="{{ config['default'] }}"
+                        step="{{ '0.01' if config['type'] == 'float' else '1' }}"
+                    >
+                </label><br>
+            {% endfor %}
+
+            <br>
+            <button onclick="submit('{{ method['id'] }}', '{{ method['method_name'] }}')">
+                Run
+            </button>
+
+        </div>
+    {% endfor %}
+
+    <script>
+        const datasetName = "{{ dataset_name }}";
+        const encodedDatasetParams = encodeURIComponent(JSON.stringify({{ user_parameters | tojson }}));
+
+        function showForm(id) {
+            document.querySelectorAll("[id^='form-']").forEach(el => el.style.display = "none");
+            document.getElementById("form-" + id).style.display = "block";
+        }
+
+        function submit(methodId, methodName) {
+            const params = {};
+            document.querySelectorAll("#form-" + methodId + " input").forEach(input => {
+                params[input.id.replace("_" + methodId, "")] = Number(input.value);
+            });
+            const encodedMethodParams = encodeURIComponent(JSON.stringify(params));
+            window.location.href = "/" + datasetName + "/" + encodedDatasetParams + "/" + methodName + "/" + encodedMethodParams;
+        }
+    </script>
+
+</body>
+</html>

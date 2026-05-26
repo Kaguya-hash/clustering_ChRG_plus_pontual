@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Clustering Result</title>
+</head>
+<body>
+
+    <h2>Clustering Result</h2>
+
+    <p><b>Dataset:</b> {{ dataset_name }} &nbsp;|&nbsp; <b>Method:</b> {{ method_name }}</p>
+
+    <div style="display: flex; gap: 40px; margin-top: 16px;">
+        <img src="data:image/png;base64,{{ dataset_plot }}" alt="Dataset plot" width="400">
+        <img src="data:image/png;base64,{{ clustering_plot }}" alt="Clustering result" width="400">
+    </div>
+
+</body>
+</html>
