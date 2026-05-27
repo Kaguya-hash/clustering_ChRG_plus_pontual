@@ -56,9 +56,41 @@
                 {% endfor %}
             </div>
 
-            <div style="margin-bottom: 20px;">
-                <p id="loading-{{ dataset['id'] }}" style="display: none; color: gray;">Generating preview...</p>
-                <img id="preview-{{ dataset['id'] }}" src="" alt="Dataset Preview" width="400" style="display: none; border: 1px solid #ccc;">
+            <div
+                style="
+                    margin-bottom: 20px;
+                    width: 420px;
+                    height: 420px;
+                    border: 1px solid #ccc;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background-color: #f9f9f9;
+                    position: relative;
+                "
+            >
+                <p
+                    id="loading-{{ dataset['id'] }}"
+                    style="
+                        position: absolute;
+                        color: gray;
+                        display: none;
+                    "
+                >
+                    Generating preview...
+                </p>
+
+                <img
+                    id="preview-{{ dataset['id'] }}"
+                    src=""
+                    alt="Dataset Preview"
+                    width="400"
+                    style="
+                        max-width: 100%;
+                        max-height: 100%;
+                        display: none;
+                    "
+                >
             </div>
 
             <button onclick="submit('{{ dataset['id'] }}', '{{ dataset['dataset_name'] }}')" style="padding: 10px 20px; cursor: pointer;">
@@ -95,7 +127,8 @@
             const loading = document.getElementById("loading-" + id);
             const img = document.getElementById("preview-" + id);
             loading.style.display = "block";
-            img.style.display = "none";
+
+            img.style.visibility = "hidden";
 
             fetch("/experiment/preview/" + datasetName, {
                 method: "POST",
@@ -106,6 +139,7 @@
             .then(data => {
                 img.src = "data:image/png;base64," + data.plot;
                 img.style.display = "block";
+                img.style.visibility = "visible";
                 loading.style.display = "none";
             });
         }
