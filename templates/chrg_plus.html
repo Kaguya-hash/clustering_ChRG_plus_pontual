@@ -27,18 +27,18 @@
     <hr>
 
     <h2>The Problem with Traditional Clustering</h2>
-    <p>Traditional clustering methods, like K-means, often struggle because they reduce a cluster to a single representative point[cite: 2123]. This makes it difficult to capture more complex geometric properties in the data. While some methods try to fix this using multiple points, they often rely on heuristics and lack a unified theoretical framework[cite: 2127].</p>
+    <p>Traditional clustering methods, like K-means, often struggle because they reduce a cluster to a single representative point. This makes it difficult to capture more complex geometric properties in the data. While some methods try to fix this using multiple points, they often rely on heuristics and lack a unified theoretical framework.</p>
 
     <h2>The ChRG+ Approach</h2>
-    <p>To solve this, the ChRG+ method treats the representation of a cluster as a central, explicit geometric structure[cite: 2080]. It utilizes a set of these geometries to accurately capture the shape of the cluster, allowing for the description of complex or heterogeneous forms[cite: 2083].</p>
+    <p>To solve this, the ChRG+ method treats the representation of a cluster as a central, explicit geometric structure. It utilizes a set of these abstract geometries (making an abstract multi-geometric representation) to accurately capture the shape of the cluster, allowing for the description of complex or heterogeneous forms.</p>
     
-    <p>These representations are integrated directly into a hierarchical clustering algorithm, ensuring that the true shape of the data guides the clustering process[cite: 2084].</p>
+    <p>These representations are integrated directly into a hierarchical clustering algorithm, ensuring that the true shape of the data guides the clustering process.</p>
 
     <h2>Resistance to Noise</h2>
-    <p>To deal with noise, ChRG+ incorporates an explicit strategy to resist outliers by penalizing merges that involve very small clusters[cite: 2085]. This prevents isolated points from distorting the main clusters[cite: 2137].</p>
+    <p>To deal with noise, ChRG+ incorporates an explicit strategy to resist outliers by penalizing merges that involve very small clusters. This prevents isolated points from distorting the main clusters.</p>
 
     <h2>Results and Evaluation</h2>
-    <p>The method was evaluated using standard benchmark datasets from the <a href="https://scikit-learn.org/stable/modules/clustering.html" target="_blank">scikit-learn library</a>[cite: 2140]. The results showed a strong ability to capture complex structures and maintain consistency while handling outliers[cite: 2086].</p>
+    <p>The method was evaluated using standard benchmark datasets from the <a href="https://scikit-learn.org/stable/modules/clustering.html" target="_blank">scikit-learn library</a>[cite: 2140]. The results showed a strong ability to capture complex structures and maintain consistency while handling outliers.</p>
     
     <div class="image-container">
         <img src="/static/my_clusters.png" alt="ChRG+ clustering results">
@@ -46,11 +46,11 @@
     </div>
 
     <h2>Limitations</h2>
-    <p>While effective, the current study identified several limitations[cite: 420]:</p>
+    <p>While effective, the current study identified several limitations:</p>
     <ul>
         <li><strong>Dataset Scope:</strong> Experiments were primarily conducted on two-dimensional datasets with relatively small sizes, typically between 500 and 1000 points.</li>
         <li><strong>Hyperparameter Dependency:</strong> The method relies on the selection of specific parameters—the number of expected clusters (K), the number of representative geometries (S), and the parameters for outlier penalization (M and lambda). In this framework, K, S, and M are natural numbers, while lambda is a value greater than or equal to zero. Currently, these parameters lack a systematic or automated selection strategy and were chosen based on a priori knowledge.</li>
-        <li><strong>Representative Types:</strong> The initial evaluation focused largely on point-based representatives rather than more complex geometric structures[cite: 461].</li>
+        <li><strong>Representative Types:</strong> The initial evaluation focused largely on point-based representatives rather than more complex geometric structures.</li>
     </ul>
 
     <h2>Future Work</h2>
