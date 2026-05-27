@@ -2,18 +2,71 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Clustering Result</title>
+    <title>Clustering Experiment: Results</title>
+    <style>
+        .result-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 40px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        .result-container img {
+            height: 400px;
+            max-width: 100%;
+            object-fit: contain;
+            border: 1px solid #ccc;
+        }
+        .image-label {
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 <body>
 
-    <h2>Clustering Result</h2>
+    <h1>Clustering Experiment</h1>
+    <h3>Step 3: Final Results</h3>
 
-    <p><b>Dataset:</b> {{ dataset_name }} &nbsp;|&nbsp; <b>Method:</b> {{ method_name }}</p>
+    <hr>
 
-    <div style="display: flex; gap: 40px; margin-top: 16px;">
-        <img src="data:image/png;base64,{{ dataset_plot }}" alt="Dataset plot" width="400">
-        <img src="data:image/png;base64,{{ clustering_plot }}" alt="Clustering result" width="400">
+    <p><b>Dataset:</b> {{ dataset_name }}</p>
+    <p><b>Method Applied:</b> {{ method_name }}</p>
+
+    <hr>
+
+    <h3>Visual Comparison</h3>
+    <p>The following images show the original data distribution versus the final clustering result achieved by the algorithm.</p>
+
+    <div class="result-container">
+        <div>
+            <p class="image-label">Original Dataset</p>
+            <img src="data:image/png;base64,{{ dataset_plot }}" alt="Original Dataset Plot">
+        </div>
+        
+        <div>
+            <p class="image-label">Clustered Result</p>
+            <img src="data:image/png;base64,{{ clustering_plot }}" alt="Clustering Result Plot">
+        </div>
     </div>
+
+    <hr>
+
+    <p>
+        <a href="#" onclick="
+            var parts = window.location.pathname.split('/').filter(Boolean);
+            parts = parts.slice(0, -2);
+            window.location.href = '/' + parts.join('/');
+        ">← Choose another method</a>
+    </p>
+    <p>
+        <a href="/experiment">← Start New Experiment</a>
+    </p>
+    <p>
+        <a href="/">← Back to Home</a>
+    </p>
 
 </body>
 </html>

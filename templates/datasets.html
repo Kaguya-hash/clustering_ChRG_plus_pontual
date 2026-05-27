@@ -2,13 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Select Dataset</title>
+    <title>Clustering Experiment: Step 1</title>
 </head>
 <body>
 
-    <h2>Data Generator</h2>
+    <h1>Start Clustering Experiment</h1>
 
-    <h3>Select a dataset:</h3>
+    <hr>
+
+    <h2>Step 1: Select a Dataset</h2>
+    
+    <hr>
+
+    <h3>1. Select a dataset type:</h3>
+
+    <p>To begin your experiment, you first need to <strong>choose a dataset</strong> from the list below.</p>
 
     <ul>
         {% for dataset in datasets %}
@@ -20,44 +28,49 @@
         {% endfor %}
     </ul>
 
+    <hr>
+
     {% for dataset in datasets %}
         <div id="form-{{ dataset['id'] }}" style="display: none; margin-top: 20px;">
 
-            <h4>{{ dataset['dataset_name'] }} — parameters</h4>
+            <h3>2. Configure {{ dataset['dataset_name'] }} parameters</h3>
 
-            <div style="display: flex; gap: 40px; align-items: flex-start;">
+            <p>Adjust the parameters to change how the data is generated - a preview of the dataset will be displayed here as you adjust the parameters.</p>
 
-                <div>
-                    {% for param_name, config in dataset['parameters_schema'].items() %}
-                        <label>
+            <div style="margin-bottom: 20px;">
+                {% for param_name, config in dataset['parameters_schema'].items() %}
+                    <div style="margin-bottom: 10px;">
+                        <label for="{{ param_name }}_{{ dataset['id'] }}">
                             {{ param_name }}:
-                            <input
-                                type="number"
-                                id="{{ param_name }}_{{ dataset['id'] }}"
-                                min="{{ config['min'] }}"
-                                max="{{ config['max'] }}"
-                                value="{{ config['default'] }}"
-                                step="{{ '0.01' if config['type'] == 'float' else '1' }}"
-                                oninput="schedulePreview('{{ dataset['id'] }}', '{{ dataset['dataset_name'] }}')"
-                            >
-                        </label><br>
-                    {% endfor %}
-
-                    <br>
-                    <button onclick="submit('{{ dataset['id'] }}', '{{ dataset['dataset_name'] }}')">
-                        Submit
-                    </button>
-                </div>
-
-                <div>
-                    <img id="preview-{{ dataset['id'] }}" src="" alt="Preview" width="300" style="display: none;">
-                    <p id="loading-{{ dataset['id'] }}" style="display: none; color: gray;">Generating...</p>
-                </div>
-
+                        </label>
+                        <input
+                            type="number"
+                            id="{{ param_name }}_{{ dataset['id'] }}"
+                            min="{{ config['min'] }}"
+                            max="{{ config['max'] }}"
+                            value="{{ config['default'] }}"
+                            step="{{ '0.01' if config['type'] == 'float' else '1' }}"
+                            oninput="schedulePreview('{{ dataset['id'] }}', '{{ dataset['dataset_name'] }}')"
+                        > | recommend min and max: {{ config['min'] }} – {{ config['max'] }}
+                    </div>
+                {% endfor %}
             </div>
+
+            <div style="margin-bottom: 20px;">
+                <p id="loading-{{ dataset['id'] }}" style="display: none; color: gray;">Generating preview...</p>
+                <img id="preview-{{ dataset['id'] }}" src="" alt="Dataset Preview" width="400" style="display: none; border: 1px solid #ccc;">
+            </div>
+
+            <button onclick="submit('{{ dataset['id'] }}', '{{ dataset['dataset_name'] }}')" style="padding: 10px 20px; cursor: pointer;">
+                Confirm Dataset →
+            </button>
 
         </div>
     {% endfor %}
+
+    <p>
+        <a href="/">← Back to Home</a>
+    </p>
 
     <script>
         let debounceTimer = null;
@@ -84,7 +97,7 @@
             loading.style.display = "block";
             img.style.display = "none";
 
-            fetch("/preview/" + datasetName, {
+            fetch("/experiment/preview/" + datasetName, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(params)
@@ -103,7 +116,7 @@
                 params[input.id.replace("_" + datasetId, "")] = Number(input.value);
             });
             const encodedParams = encodeURIComponent(JSON.stringify(params));
-            window.location.href = "/" + datasetName + "/" + encodedParams;
+            window.location.href = "/experiment/" + datasetName + "/" + encodedParams;
         }
     </script>
 

@@ -1,4 +1,4 @@
-﻿from flask import Flask, render_template, request, jsonify
+﻿from flask import Flask, render_template, request, jsonify, redirect, url_for
 import json
 import psycopg2
 import psycopg2.extras
@@ -71,6 +71,18 @@ app = Flask(__name__)
 DB_CONNECTION_STRING = os.getenv("DB_CONNECTION_STRING")
 
 @app.route("/", methods=["GET"])
+def index():
+    return render_template("index.html")
+
+@app.route("/clustering", methods=["GET"])
+def clustering_info():
+    return render_template("clustering.html")
+
+@app.route("/ChRG_plus", methods=["GET"])
+def chrg_plus_info():
+    return render_template("chrg_plus.html")
+
+@app.route("/experiment", methods=["GET"])
 def get_datasets():
 
     conn = psycopg2.connect(DB_CONNECTION_STRING)
@@ -84,7 +96,7 @@ def get_datasets():
 
     return render_template("datasets.html", datasets=datasets)
 
-@app.route("/preview/<dataset_name>", methods=["POST"])
+@app.route("/experiment/preview/<dataset_name>", methods=["POST"])
 def preview_dataset(dataset_name):
     conn = psycopg2.connect(DB_CONNECTION_STRING)
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -117,7 +129,7 @@ def preview_dataset(dataset_name):
 
     return jsonify({"plot": plot})
 
-@app.route("/<dataset_name>/<params_json>", methods=["GET"])
+@app.route("/experiment/<dataset_name>/<params_json>", methods=["GET"])
 def get_methods(dataset_name, params_json):
 
     user_parameters = json.loads(params_json)
@@ -159,7 +171,7 @@ def get_methods(dataset_name, params_json):
 
     return render_template("methods.html", methods=methods, dataset_name=dataset_name, user_parameters=user_parameters, dataset_plot=plot_b64)
 
-@app.route("/<dataset_name>/<params_json>/<method_name>/<params_json2>", methods=["GET"])
+@app.route("/experiment/<dataset_name>/<params_json>/<method_name>/<params_json2>", methods=["GET"])
 def get_result(dataset_name, params_json, method_name, params_json2):
     conn = psycopg2.connect(DB_CONNECTION_STRING)
     cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -202,8 +214,6 @@ def get_result(dataset_name, params_json, method_name, params_json2):
     if user_parameters:
         for param_name, param_data in user_parameters.items():
             kwargs[param_name] = param_data
-    for param_name, param_data in user_parameters.items():
-        kwargs[param_name] = param_data
     if hidden_parameters_schema:
         for param_name, param_data in hidden_parameters_schema.items():
             kwargs[param_name] = param_data["default"]

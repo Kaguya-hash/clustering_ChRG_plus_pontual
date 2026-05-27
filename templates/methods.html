@@ -2,17 +2,27 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Select Clustering Method</title>
+    <title>Clustering Experiment: Step 2</title>
 </head>
 <body>
 
-    <h2>Dataset: {{ dataset_name }}</h2>
+    <h1>Clustering Experiment</h1>
+    <h2>Step 2: Select a Clustering Method</h2>
 
-    {% if dataset_plot %}
-        <img src="data:image/png;base64,{{ dataset_plot }}" alt="Dataset plot" width="400">
-    {% endif %}
+    <hr>
 
-    <h3>Select a method:</h3>
+    <p><b>Dataset:</b> {{ dataset_name }}</p>
+
+    <div style="margin-bottom: 30px;">
+        {% if dataset_plot %}
+            <img src="data:image/png;base64,{{ dataset_plot }}" alt="Selected Dataset plot" width="400" style="border: 1px solid #ddd; border-radius: 4px;">
+        {% endif %}
+    </div>
+
+    <hr>
+
+    <h3>1. Choose an algorithm:</h3>
+    <p>Select a <strong>clustering method</strong> from the list below to apply to your generated data.</p>
 
     <ul>
         {% for method in methods %}
@@ -22,51 +32,74 @@
                 </a>
             </li>
         {% endfor %}
+
+        <p><strong>Note:</strong> The ChrRG_plus_pontual function may take up to 50 seconds to execute depending on the chosen parameters of the dataset. Please note that this version has not yet been optimized for high-speed performance and the host system of this website has limited resources.</p>
     </ul>
+
+    <hr>
 
     {% for method in methods %}
         <div id="form-{{ method['id'] }}" style="display: none; margin-top: 20px;">
 
-            <h4>{{ method['method_name'] }} — parameters</h4>
+            <h3>2. Configure {{ method['method_name'] }} parameters</h3>
+            
+            <p>Set the hyperparameters for the algorithm. These values will determine how the clusters are formed.</p>
 
-            {% for param_name, config in method['parameters_schema'].items() %}
-                <label>
-                    {{ param_name }}:
-                    <input
-                        type="number"
-                        id="{{ param_name }}_{{ method['id'] }}"
-                        min="{{ config['min'] }}"
-                        max="{{ config['max'] }}"
-                        value="{{ config['default'] }}"
-                        step="{{ '0.01' if config['type'] == 'float' else '1' }}"
-                    >
-                </label><br>
-            {% endfor %}
+            <div style="margin-bottom: 20px;">
+                {% for param_name, config in method['parameters_schema'].items() %}
+                    <div style="margin-bottom: 10px;">
+                        <label for="{{ param_name }}_{{ method['id'] }}">
+                            {{ param_name }}:
+                        </label>
+                        <input
+                            type="number"
+                            id="{{ param_name }}_{{ method['id'] }}"
+                            min="{{ config['min'] }}"
+                            max="{{ config['max'] }}"
+                            value="{{ config['default'] }}"
+                            step="{{ '0.01' if config['type'] == 'float' else '1' }}"
+                        >
+                    </div>
+                {% endfor %}
+            </div>
 
-            <br>
-            <button onclick="submit('{{ method['id'] }}', '{{ method['method_name'] }}')">
-                Run
+            <button onclick="submit('{{ method['id'] }}', '{{ method['method_name'] }}')" style="padding: 10px 20px; cursor: pointer;">
+                Run Experiment →
             </button>
 
         </div>
     {% endfor %}
 
+
+    <p>
+        <a href="/experiment">← Choose another dataset</a>
+    </p>
+    <p>
+        <a href="/">← Back to Home</a>
+    </p>
+
     <script>
         const datasetName = "{{ dataset_name }}";
+        // Convert the Python dictionary to a JSON string safely for JavaScript
         const encodedDatasetParams = encodeURIComponent(JSON.stringify({{ user_parameters | tojson }}));
 
         function showForm(id) {
+            // Hide all forms first
             document.querySelectorAll("[id^='form-']").forEach(el => el.style.display = "none");
+            // Show the selected one
             document.getElementById("form-" + id).style.display = "block";
         }
 
         function submit(methodId, methodName) {
             const params = {};
+            // Collect all inputs within the active form
             document.querySelectorAll("#form-" + methodId + " input").forEach(input => {
                 params[input.id.replace("_" + methodId, "")] = Number(input.value);
             });
             const encodedMethodParams = encodeURIComponent(JSON.stringify(params));
-            window.location.href = "/" + datasetName + "/" + encodedDatasetParams + "/" + methodName + "/" + encodedMethodParams;
+            
+            // Build the final URL path
+            window.location.href = "/experiment/" + datasetName + "/" + encodedDatasetParams + "/" + methodName + "/" + encodedMethodParams;
         }
     </script>
 
