@@ -43,7 +43,8 @@
 
             <h3>2. Configure {{ method['method_name'] }} parameters</h3>
             
-            <p>Set the hyperparameters for the algorithm. These values will determine how the clusters are formed.</p>
+            <p>Set the hyperparameters for the algorithm. These values will determine how the clusters are formed. For methods other than ChRG_plus_pontual, refer to the <a href="https://en.wikipedia.org/wiki/K-means_clustering" target="_blank">official website</a> for a detailed explanation of each parameter.
+For the ChRG+ method, see the <a href="/ChRG_plus">ChRG_plus page</a></p>
 
             <div style="margin-bottom: 20px;">
                 {% for param_name, config in method['parameters_schema'].items() %}
