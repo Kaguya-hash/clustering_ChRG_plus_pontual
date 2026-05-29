@@ -54,8 +54,7 @@ The main focus of the platform is usability and interactivity, making clustering
 
 Although the platform is fully operational, there are several planned improvements for future development:
 
-- Refactoring and restructuring the codebase
 - Improving maintainability and scalability
 - Optimizing algorithm performance
-- Enhancing frontend responsiveness and UX
+- Enhancing frontend responsiveness
 - Adding more clustering algorithms and benchmarking tools
