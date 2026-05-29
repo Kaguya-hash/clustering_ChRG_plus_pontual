@@ -1,7 +1,6 @@
-```md
 # ChRG+ Hub | Interactive Clustering Web Application
 
-ChRG+ Hub is an interactive web platform developed as the practical implementation of my Master's thesis at the University of Coimbra. The project focuses on ChRG+, a custom hierarchical clustering algorithm developed as part of the research, designed to handle datasets with complex geometric structures and high levels of noise.
+ChRG+ Hub is an interactive web platform developed as the practical implementation of my Master's thesis at the University of Coimbra. The project focuses on **ChRG+**, a hierarchical clustering algorithm developed as part of the research, designed to handle datasets with complex geometric structures and high levels of noise.
 
 The platform combines theoretical explanations with an interactive experimentation environment, allowing users to generate synthetic datasets and visually compare the behavior of ChRG+ against traditional clustering methods in real time.
 
@@ -60,4 +59,3 @@ Although the platform is fully operational, there are several planned improvemen
 - Optimizing algorithm performance
 - Enhancing frontend responsiveness and UX
 - Adding more clustering algorithms and benchmarking tools
-```
