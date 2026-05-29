@@ -30,12 +30,21 @@
     <p>Traditional clustering methods, like K-means, often struggle because they reduce a cluster to a single representative point. This makes it difficult to capture more complex geometric properties in the data. While some methods try to fix this using multiple points, they often rely on heuristics and lack a unified theoretical framework.</p>
 
     <h2>The ChRG+ Approach</h2>
-    <p>To solve this, the ChRG+ method treats the representation of a cluster as a central, explicit geometric structure. It utilizes a set of these abstract geometries (making an abstract multi-geometric representation) to accurately capture the shape of the cluster, allowing for the description of complex or heterogeneous forms.</p>
+
+    <p>
+    To address this problem, the ChRG+ method treats cluster representation as an explicit and central geometric structure.
+    </p>
     
-    <p>These representations are integrated directly into a hierarchical clustering algorithm, ensuring that the true shape of the data guides the clustering process.</p>
+    <p>
+    It introduces the concept of an abstract multi-geometric representation, designed to accurately capture the intrinsic shape of a cluster, including complex and heterogeneous forms. This representation is constructed through the novel LDg method (Generalized Discrete Lloyd Method), which exhibits important properties such as convergence toward a local minimum — except in rare pathological cases involving strong hiper-symmetries in the data — and, in certain scenarios, stability under random variations in the dataset.
+    </p>
+    
+    <p>
+    These representations are integrated directly into the hierarchical clustering process, ensuring that the geometric structure of the data itself guides the formation of clusters.
+    </p>
 
     <h2>Resistance to Noise</h2>
-    <p>To deal with noise, ChRG+ incorporates an explicit strategy to resist outliers by penalizing merges that involve very small clusters. This prevents isolated points from distorting the main clusters.</p>
+    <p>To deal with noise, ChRG+ also incorporates an explicit strategy to resist outliers by penalizing merges that involve very small clusters. This prevents isolated points from distorting the main clusters.</p>
 
     <h2>Results and Evaluation</h2>
     <p>The method was evaluated using standard benchmark datasets from the <a href="https://scikit-learn.org/stable/modules/clustering.html" target="_blank">scikit-learn library</a>. The results showed a strong ability to capture complex structures and maintain consistency while handling outliers.</p>
